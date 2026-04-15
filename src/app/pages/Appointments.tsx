@@ -1,15 +1,26 @@
 import { useState } from "react";
 import { Layout } from "../components/Layout";
-import { Calendar, Clock, CheckCircle, X, AlertCircle, ChevronLeft, ChevronRight } from "lucide-react";
+import { MdCalendarToday, MdAccessTime, MdCheckCircle, MdWarning, MdChevronLeft, MdChevronRight, MdPeople, MdMenuBook, MdSchool, MdFavorite, MdShoppingCart, MdContentCut } from 'react-icons/md';
+import { DayPicker } from 'react-day-picker';
+import 'react-day-picker/dist/style.css';
 
 const services = [
-  { id: 1, name: "School Counselor", icon: "👥", duration: "30 min", color: "blue", capacity: 1 },
-  { id: 2, name: "Library Visit", icon: "📚", duration: "60 min", color: "teal", capacity: 10 },
-  { id: 3, name: "Teacher Meeting", icon: "👨‍🏫", duration: "20 min", color: "purple", capacity: 3 },
-  { id: 4, name: "Health Check", icon: "🏥", duration: "15 min", color: "green", capacity: 2 },
-  { id: 5, name: "Shopee", icon: "🛒", duration: "45 min", color: "orange", capacity: 5 },
-  { id: 6, name: "Salon", icon: "💇", duration: "40 min", color: "pink", capacity: 2 },
+  { id: 1, name: "School Counselor", duration: "30 min", color: "blue", capacity: 1 },
+  { id: 2, name: "Library Visit", duration: "60 min", color: "teal", capacity: 10 },
+  { id: 3, name: "Teacher Meeting", duration: "20 min", color: "purple", capacity: 3 },
+  { id: 4, name: "Health Check", duration: "15 min", color: "green", capacity: 2 },
+  { id: 5, name: "Shopee", duration: "45 min", color: "orange", capacity: 5 },
+  { id: 6, name: "Salon", duration: "40 min", color: "pink", capacity: 2 },
 ];
+
+const iconMap = {
+  1: MdPeople,
+  2: MdMenuBook,
+  3: MdSchool,
+  4: MdFavorite,
+  5: MdShoppingCart,
+  6: MdContentCut,
+};
 
 const allTimeSlots = [
   "09:00 AM",
@@ -34,21 +45,13 @@ const initialBookingsData = [
   { serviceId: 6, date: "Apr 13, 2026", time: "02:30 PM" },
 ];
 
-const getDaysInMonth = (year: number, month: number) => {
-  return new Date(year, month + 1, 0).getDate();
-};
-
-const getFirstDayOfMonth = (year: number, month: number) => {
-  return new Date(year, month, 1).getDay();
-};
-
 export function Appointments() {
   const [myBookings, setMyBookings] = useState([
     {
       id: 1,
       serviceId: 1,
       service: "School Counselor",
-      icon: "👥",
+      iconId: 1,
       date: "May 19, 2025",
       time: "2:00 PM",
       with: "Ms. Sarah Williams",
@@ -58,7 +61,7 @@ export function Appointments() {
       id: 2,
       serviceId: 2,
       service: "Library Visit",
-      icon: "📚",
+      iconId: 2,
       date: "May 22, 2025",
       time: "10:00 AM",
       with: "Library Staff",
@@ -73,73 +76,11 @@ export function Appointments() {
   const [showSuccess, setShowSuccess] = useState(false);
   const [showCancelConfirm, setShowCancelConfirm] = useState<number | null>(null);
 
-  const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
-  const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
-
-  const monthNames = [
-    "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
-  ];
-
-  const daysInMonth = getDaysInMonth(currentYear, currentMonth);
-  const firstDayOfMonth = getFirstDayOfMonth(currentYear, currentMonth);
   const today = new Date();
-
-  const handlePreviousMonth = () => {
-    if (currentMonth === 0) {
-      setCurrentMonth(11);
-      setCurrentYear(currentYear - 1);
-    } else {
-      setCurrentMonth(currentMonth - 1);
-    }
-  };
-
-  const handleNextMonth = () => {
-    if (currentMonth === 11) {
-      setCurrentMonth(0);
-      setCurrentYear(currentYear + 1);
-    } else {
-      setCurrentMonth(currentMonth + 1);
-    }
-  };
-
-  const handleDateClick = (day: number) => {
-    const clickedDate = new Date(currentYear, currentMonth, day);
-    const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-
-    // Only allow selecting today or future dates
-    if (clickedDate >= todayStart) {
-      setSelectedDate(clickedDate);
-      setSelectedTime(null); // Reset time when date changes
-    }
-  };
 
   const handleServiceSelect = (serviceId: number) => {
     setSelectedService(serviceId);
     setSelectedTime(null); // Reset time when service changes
-  };
-
-  const isDateDisabled = (day: number) => {
-    const date = new Date(currentYear, currentMonth, day);
-    const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-    return date < todayStart;
-  };
-
-  const isDateSelected = (day: number) => {
-    if (!selectedDate) return false;
-    return (
-      selectedDate.getDate() === day &&
-      selectedDate.getMonth() === currentMonth &&
-      selectedDate.getFullYear() === currentYear
-    );
-  };
-
-  const isToday = (day: number) => {
-    return (
-      day === today.getDate() &&
-      currentMonth === today.getMonth() &&
-      currentYear === today.getFullYear()
-    );
   };
 
   // Check if a time slot has passed (only for today)
@@ -205,7 +146,7 @@ export function Appointments() {
       id: Date.now(),
       serviceId: selectedService,
       service: service?.name || "",
-      icon: service?.icon || "",
+      iconId: selectedService,
       date: formattedDate,
       time: selectedTime,
       with: service?.name === "Library Visit" ? "Library Staff" : "Staff Member",
@@ -245,15 +186,6 @@ export function Appointments() {
 
   const isBookingComplete = selectedService && selectedDate && selectedTime;
 
-  // Generate calendar grid
-  const calendarDays = [];
-  for (let i = 0; i < firstDayOfMonth; i++) {
-    calendarDays.push(null); // Empty cells before month starts
-  }
-  for (let day = 1; day <= daysInMonth; day++) {
-    calendarDays.push(day);
-  }
-
   return (
     <Layout>
       <div className="space-y-6">
@@ -267,8 +199,8 @@ export function Appointments() {
         <div>
           <h3 className="text-3xl font-bold text-gray-800 mb-6">My Bookings</h3>
           {myBookings.length === 0 ? (
-            <div className="bg-white rounded-2xl p-12 text-center shadow-sm">
-              <Calendar size={48} className="text-gray-300 mx-auto mb-4" />
+            <div className="bg-white rounded-md p-12 text-center shadow-sm">
+              <MdCalendarToday size={48} className="text-gray-300 mx-auto mb-4" />
               <p className="text-gray-500">No upcoming appointments</p>
             </div>
           ) : (
@@ -276,11 +208,11 @@ export function Appointments() {
               {myBookings.map((booking) => (
                 <div
                   key={booking.id}
-                  className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100"
+                  className="bg-white rounded-md p-6 shadow-sm border border-gray-100"
                 >
                   <div className="flex items-center gap-6">
-                    <div className="w-16 h-16 rounded-2xl bg-teal-100 flex items-center justify-center text-3xl">
-                      {booking.icon}
+                    <div className="w-16 h-16 rounded-md bg-blue-600 flex items-center justify-center text-3xl">
+                      {(() => { const Icon = iconMap[booking.iconId]; return <Icon size={32} className="text-white" />; })()}
                     </div>
                     <div className="flex-1">
                       <h4 className="text-xl font-semibold text-gray-800 mb-1">
@@ -289,11 +221,11 @@ export function Appointments() {
                       <p className="text-sm text-gray-500 mb-2">with {booking.with}</p>
                       <div className="flex items-center gap-4">
                         <div className="flex items-center gap-2 text-sm text-gray-500">
-                          <Calendar size={16} />
+                          <MdCalendarToday size={16} />
                           <span>{booking.date}</span>
                         </div>
                         <div className="flex items-center gap-2 text-sm text-gray-500">
-                          <Clock size={16} />
+                          <MdAccessTime size={16} />
                           <span>{booking.time}</span>
                         </div>
                       </div>
@@ -317,7 +249,7 @@ export function Appointments() {
         </div>
 
         {/* Booking Flow - Single Screen */}
-        <div className="bg-white rounded-3xl p-10 shadow-lg">
+        <div className="bg-white rounded-md p-10 shadow-lg">
           {/* Step 1: Select Service */}
           <div className="mb-10">
             <div className="flex items-center gap-4 mb-8">
@@ -326,18 +258,20 @@ export function Appointments() {
               </div>
               <h3 className="text-3xl font-bold text-gray-800">Select Service</h3>
             </div>
-            <div className="grid grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {services.map((service) => (
                 <button
                   key={service.id}
                   onClick={() => handleServiceSelect(service.id)}
-                  className={`p-8 rounded-3xl border-2 transition-all ${
+                  className={`p-8 rounded-md border-2 transition-all ${
                     selectedService === service.id
                       ? "border-blue-500 bg-blue-50 shadow-lg"
                       : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
                   }`}
                 >
-                  <div className="text-5xl mb-4">{service.icon}</div>
+                  <div className="w-16 h-16 bg-blue-600 rounded-md flex items-center justify-center mx-auto mb-4">
+                    {(() => { const Icon = iconMap[service.id]; return <Icon size={32} className="text-white" />; })()}
+                  </div>
                   <h4 className="font-bold text-gray-800 mb-2 text-lg">
                     {service.name}
                   </h4>
@@ -360,76 +294,17 @@ export function Appointments() {
                 <h3 className="text-3xl font-bold text-gray-800">Select Date</h3>
               </div>
               
-              <div className="bg-gray-50 rounded-3xl p-8">
-                {/* Calendar Header */}
-                <div className="flex items-center justify-between mb-8">
-                  <button
-                    onClick={handlePreviousMonth}
-                    className="p-3 hover:bg-white rounded-xl transition-colors"
-                  >
-                    <ChevronLeft size={32} className="text-gray-600" />
-                  </button>
-                  <h4 className="text-2xl font-bold text-gray-800">
-                    {monthNames[currentMonth]} {currentYear}
-                  </h4>
-                  <button
-                    onClick={handleNextMonth}
-                    className="p-3 hover:bg-white rounded-xl transition-colors"
-                  >
-                    <ChevronRight size={32} className="text-gray-600" />
-                  </button>
-                </div>
-
-                {/* Calendar Grid */}
-                <div className="grid grid-cols-7 gap-3">
-                  {/* Day headers */}
-                  {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
-                    <div key={day} className="text-center font-bold text-gray-600 py-3 text-base">
-                      {day}
-                    </div>
-                  ))}
-                  
-                  {/* Calendar days */}
-                  {calendarDays.map((day, index) => {
-                    if (day === null) {
-                      return <div key={`empty-${index}`} className="aspect-square" />;
-                    }
-
-                    const disabled = isDateDisabled(day);
-                    const selected = isDateSelected(day);
-                    const isTodayDate = isToday(day);
-
-                    return (
-                      <button
-                        key={day}
-                        onClick={() => handleDateClick(day)}
-                        disabled={disabled}
-                        className={`aspect-square rounded-2xl flex items-center justify-center font-semibold text-lg transition-all ${
-                          selected
-                            ? "bg-teal-500 text-white shadow-lg scale-105"
-                            : isTodayDate
-                            ? "bg-blue-100 text-blue-600 border-2 border-blue-500"
-                            : disabled
-                            ? "text-gray-300 cursor-not-allowed"
-                            : "hover:bg-white text-gray-700 hover:shadow-md"
-                        }`}
-                      >
-                        {day}
-                      </button>
-                    );
-                  })}
-                </div>
-
-                <div className="mt-6 flex items-center gap-6 text-base">
-                  <div className="flex items-center gap-3">
-                    <div className="w-6 h-6 rounded-lg bg-blue-100 border-2 border-blue-500"></div>
-                    <span className="text-gray-600 font-medium">Today</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="w-6 h-6 rounded-lg bg-teal-500"></div>
-                    <span className="text-gray-600 font-medium">Selected</span>
-                  </div>
-                </div>
+              <div className="bg-gray-50 rounded-md p-8">
+                <DayPicker
+                  mode="single"
+                  selected={selectedDate}
+                  onSelect={(date) => {
+                    setSelectedDate(date || null);
+                    setSelectedTime(null); // Reset time when date changes
+                  }}
+                  disabled={{ before: new Date() }}
+                  className="react-day-picker-custom"
+                />
               </div>
             </div>
           )}
@@ -445,7 +320,7 @@ export function Appointments() {
               </div>
 
               {/* Info Banner */}
-              <div className="mb-6 p-4 bg-blue-50 rounded-xl border border-blue-200">
+              <div className="mb-6 p-4 bg-blue-50 rounded-md border border-blue-200">
                 <p className="text-sm text-blue-700">
                   <strong>Note:</strong> Time slots show availability based on current time and service capacity.
                   {(() => {
@@ -455,7 +330,7 @@ export function Appointments() {
                 </p>
               </div>
 
-              <div className="grid grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
                 {allTimeSlots.map((timeSlot) => {
                   const available = isTimeSlotAvailable(timeSlot);
                   const isPast = isTimePassed(timeSlot);
@@ -467,7 +342,7 @@ export function Appointments() {
                       key={timeSlot}
                       onClick={() => available && setSelectedTime(timeSlot)}
                       disabled={!available}
-                      className={`p-5 rounded-2xl border-2 transition-all ${
+                      className={`p-5 rounded-md border-2 transition-all ${
                         selectedTime === timeSlot
                           ? "border-purple-500 bg-purple-50 shadow-lg"
                           : available
@@ -476,7 +351,7 @@ export function Appointments() {
                       }`}
                     >
                       <div className="flex items-center justify-center gap-2">
-                        <Clock size={20} className={available ? "text-gray-600" : "text-gray-400"} />
+                        <MdAccessTime size={20} className={available ? "text-gray-600" : "text-gray-400"} />
                         <span className={`font-semibold text-base ${available ? "text-gray-800" : "text-gray-400"}`}>
                           {timeSlot}
                         </span>
@@ -503,7 +378,7 @@ export function Appointments() {
             <div className="pt-8 border-t border-gray-200 animate-in fade-in duration-300">
               <button
                 onClick={handleBooking}
-                className="w-full py-6 bg-gradient-to-r from-green-500 to-teal-500 text-white rounded-2xl font-bold text-2xl hover:from-green-600 hover:to-teal-600 transition-all shadow-lg hover:shadow-xl"
+                className="w-full py-6 bg-gradient-to-r from-green-500 to-teal-500 text-white rounded-md font-bold text-2xl hover:from-green-600 hover:to-teal-600 transition-all shadow-lg hover:shadow-xl"
               >
                 Confirm Booking
               </button>
@@ -514,9 +389,9 @@ export function Appointments() {
         {/* Success Modal */}
         {showSuccess && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-3xl p-12 text-center shadow-2xl max-w-md">
+            <div className="bg-white rounded-md p-12 text-center shadow-2xl max-w-md">
               <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <CheckCircle size={60} className="text-green-500" />
+                <MdCheckCircle size={60} className="text-green-500" />
               </div>
               <h3 className="text-2xl font-bold text-gray-800 mb-2">
                 Appointment Booked!
@@ -531,9 +406,9 @@ export function Appointments() {
         {/* Cancel Confirmation Modal */}
         {showCancelConfirm !== null && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-3xl p-8 max-w-md mx-4 shadow-2xl">
+            <div className="bg-white rounded-md p-8 max-w-md mx-4 shadow-2xl">
               <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <AlertCircle size={32} className="text-red-600" />
+                <MdWarning size={32} className="text-red-600" />
               </div>
               <h3 className="text-2xl font-bold text-gray-800 mb-4 text-center">
                 Cancel Appointment?
@@ -544,13 +419,13 @@ export function Appointments() {
               <div className="flex gap-4">
                 <button
                   onClick={() => setShowCancelConfirm(null)}
-                  className="flex-1 px-6 py-4 bg-gray-100 text-gray-700 rounded-xl font-medium hover:bg-gray-200 transition-colors"
+                  className="flex-1 px-6 py-4 bg-gray-100 text-gray-700 rounded-md font-medium hover:bg-gray-200 transition-colors"
                 >
                   Keep Appointment
                 </button>
                 <button
                   onClick={() => handleCancelBooking(showCancelConfirm)}
-                  className="flex-1 px-6 py-4 bg-red-500 text-white rounded-xl font-medium hover:bg-red-600 transition-colors shadow-md"
+                  className="flex-1 px-6 py-4 bg-red-500 text-white rounded-md font-medium hover:bg-red-600 transition-colors shadow-md"
                 >
                   Cancel Booking
                 </button>

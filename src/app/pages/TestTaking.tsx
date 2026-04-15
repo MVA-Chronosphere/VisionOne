@@ -97,7 +97,7 @@ export function TestTaking() {
     return (
       <Layout>
         <div className="max-w-3xl mx-auto text-center py-12">
-          <div className="bg-white rounded-3xl p-12 shadow-lg">
+          <div className="bg-white rounded-lg p-12 shadow-lg">
             <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
               <CheckCircle size={60} className="text-green-500" />
             </div>
@@ -105,7 +105,7 @@ export function TestTaking() {
             <p className="text-xl text-gray-600 mb-8">
               {mockTest.title}
             </p>
-            <div className="inline-block px-12 py-6 bg-blue-50 rounded-2xl mb-8">
+            <div className="inline-block px-12 py-6 bg-blue-50 rounded-md mb-8">
               <p className="text-sm text-gray-600 mb-2">Your Score</p>
               <p className="text-5xl font-bold text-blue-600">{score}%</p>
             </div>
@@ -114,7 +114,7 @@ export function TestTaking() {
             </p>
             <button
               onClick={() => navigate("/tests")}
-              className="px-12 py-4 bg-blue-500 text-white rounded-xl font-medium hover:bg-blue-600 transition-colors shadow-md text-lg"
+              className="px-12 py-4 bg-blue-500 text-white rounded-md font-medium hover:bg-blue-600 transition-colors shadow-md text-lg"
             >
               Back to Tests
             </button>
@@ -131,13 +131,13 @@ export function TestTaking() {
     <Layout>
       <div className="max-w-4xl mx-auto">
         {/* Timer & Progress */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm mb-6">
+        <div className="bg-white rounded-md p-6 shadow-sm mb-6">
           <div className="flex items-center justify-between mb-4">
             <div>
               <h2 className="text-2xl font-bold text-gray-800">{mockTest.title}</h2>
               <p className="text-gray-500">Question {currentQuestion + 1} of {mockTest.questions.length}</p>
             </div>
-            <div className="flex items-center gap-3 px-6 py-3 bg-blue-50 rounded-xl">
+            <div className="flex items-center gap-3 px-6 py-3 bg-blue-50 rounded-md">
               <Clock size={24} className="text-blue-600" />
               <span className={`text-2xl font-bold ${timeRemaining < 300 ? 'text-red-600' : 'text-blue-600'}`}>
                 {formatTime(timeRemaining)}
@@ -153,7 +153,7 @@ export function TestTaking() {
         </div>
 
         {/* Question */}
-        <div className="bg-white rounded-2xl p-8 shadow-sm mb-6">
+        <div className="bg-white rounded-md p-8 shadow-sm mb-6">
           <div className="mb-8">
             <h3 className="text-2xl font-bold text-gray-800 mb-6">
               {question.question}
@@ -165,7 +165,7 @@ export function TestTaking() {
             {question.options.map((option, index) => (
               <label
                 key={index}
-                className={`w-full p-6 text-left text-lg rounded-xl border-2 transition-all cursor-pointer flex items-center gap-4 ${
+                className={`w-full p-6 text-left text-lg rounded-md border-2 transition-all cursor-pointer flex items-center gap-4 ${
                   answers[question.id] === index
                     ? "border-blue-500 bg-blue-50"
                     : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
@@ -190,7 +190,7 @@ export function TestTaking() {
           <button
             onClick={() => setCurrentQuestion(Math.max(0, currentQuestion - 1))}
             disabled={currentQuestion === 0}
-            className="flex items-center gap-2 px-8 py-4 bg-white text-gray-700 rounded-xl font-medium hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+            className="flex items-center gap-2 px-8 py-4 bg-white text-gray-700 rounded-md font-medium hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
           >
             <ChevronLeft size={20} />
             Previous
@@ -201,7 +201,7 @@ export function TestTaking() {
               <button
                 key={index}
                 onClick={() => setCurrentQuestion(index)}
-                className={`w-12 h-12 rounded-xl font-medium transition-all ${
+                className={`w-12 h-12 rounded-md font-medium transition-all ${
                   index === currentQuestion
                     ? "bg-blue-500 text-white shadow-md"
                     : answers[mockTest.questions[index].id] !== undefined
@@ -217,7 +217,7 @@ export function TestTaking() {
           {currentQuestion < mockTest.questions.length - 1 ? (
             <button
               onClick={() => setCurrentQuestion(currentQuestion + 1)}
-              className="flex items-center gap-2 px-8 py-4 bg-blue-500 text-white rounded-xl font-medium hover:bg-blue-600 transition-colors shadow-md"
+              className="flex items-center gap-2 px-8 py-4 bg-blue-500 text-white rounded-md font-medium hover:bg-blue-600 transition-colors shadow-md"
             >
               Next
               <ChevronRight size={20} />
@@ -225,7 +225,7 @@ export function TestTaking() {
           ) : (
             <button
               onClick={() => setShowSubmitConfirm(true)}
-              className="flex items-center gap-2 px-8 py-4 bg-green-500 text-white rounded-xl font-medium hover:bg-green-600 transition-colors shadow-md"
+              className="flex items-center gap-2 px-8 py-4 bg-green-500 text-white rounded-md font-medium hover:bg-green-600 transition-colors shadow-md"
             >
               Submit Test
             </button>
@@ -235,7 +235,7 @@ export function TestTaking() {
         {/* Submit Confirmation Modal */}
         {showSubmitConfirm && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-3xl p-8 max-w-md mx-4 shadow-2xl">
+            <div className="bg-white rounded-lg p-8 max-w-md mx-4 shadow-2xl">
               <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-6">
                 <AlertCircle size={32} className="text-amber-600" />
               </div>
@@ -251,13 +251,13 @@ export function TestTaking() {
               <div className="flex gap-4">
                 <button
                   onClick={() => setShowSubmitConfirm(false)}
-                  className="flex-1 px-6 py-4 bg-gray-100 text-gray-700 rounded-xl font-medium hover:bg-gray-200 transition-colors"
+                  className="flex-1 px-6 py-4 bg-gray-100 text-gray-700 rounded-md font-medium hover:bg-gray-200 transition-colors"
                 >
                   Continue Test
                 </button>
                 <button
                   onClick={handleSubmit}
-                  className="flex-1 px-6 py-4 bg-blue-500 text-white rounded-xl font-medium hover:bg-blue-600 transition-colors shadow-md"
+                  className="flex-1 px-6 py-4 bg-blue-500 text-white rounded-md font-medium hover:bg-blue-600 transition-colors shadow-md"
                 >
                   Submit Now
                 </button>

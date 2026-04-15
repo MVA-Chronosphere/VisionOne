@@ -68,41 +68,41 @@ export function Dashboard() {
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           <button
             onClick={() => navigate("/forms")}
-            className="bg-gradient-to-br from-blue-100 to-blue-200 rounded-3xl p-10 text-left hover:shadow-xl transition-all hover:-translate-y-1"
+            className="bg-white border-2 border-blue-200 rounded-md p-10 text-left hover:shadow-lg hover:border-blue-600 transition-all hover:-translate-y-1"
           >
-            <div className="bg-blue-500 w-20 h-20 rounded-2xl flex items-center justify-center mb-6">
+            <div className="bg-blue-600 w-20 h-20 rounded-lg flex items-center justify-center mb-6">
               <FileText size={40} className="text-white" />
             </div>
-            <h3 className="text-3xl font-bold text-blue-900 mb-2">Forms</h3>
+            <h3 className="text-3xl font-bold text-gray-800 mb-2">Forms</h3>
             <p className="text-4xl font-bold text-blue-600 mb-2">{stats.forms.pending}</p>
-            <p className="text-base text-blue-700">Pending</p>
+            <p className="text-base text-gray-600">Pending</p>
           </button>
 
           <button
             onClick={() => navigate("/tests")}
-            className="bg-gradient-to-br from-teal-100 to-teal-200 rounded-3xl p-10 text-left hover:shadow-xl transition-all hover:-translate-y-1"
+            className="bg-white border-2 border-blue-200 rounded-md p-10 text-left hover:shadow-lg hover:border-blue-600 transition-all hover:-translate-y-1"
           >
-            <div className="bg-teal-500 w-20 h-20 rounded-2xl flex items-center justify-center mb-6">
+            <div className="bg-blue-600 w-20 h-20 rounded-lg flex items-center justify-center mb-6">
               <ClipboardCheck size={40} className="text-white" />
             </div>
-            <h3 className="text-3xl font-bold text-teal-900 mb-2">Tests</h3>
-            <p className="text-4xl font-bold text-teal-600 mb-2">{stats.tests.active}</p>
-            <p className="text-base text-teal-700">Active Now</p>
+            <h3 className="text-3xl font-bold text-gray-800 mb-2">Tests</h3>
+            <p className="text-4xl font-bold text-blue-600 mb-2">{stats.tests.active}</p>
+            <p className="text-base text-gray-600">Active Now</p>
           </button>
 
           <button
             onClick={() => navigate("/appointments")}
-            className="bg-gradient-to-br from-amber-100 to-amber-200 rounded-3xl p-10 text-left hover:shadow-xl transition-all hover:-translate-y-1"
+            className="bg-white border-2 border-blue-200 rounded-md p-10 text-left hover:shadow-lg hover:border-blue-600 transition-all hover:-translate-y-1"
           >
-            <div className="bg-amber-500 w-20 h-20 rounded-2xl flex items-center justify-center mb-6">
+            <div className="bg-blue-600 w-20 h-20 rounded-lg flex items-center justify-center mb-6">
               <Calendar size={40} className="text-white" />
             </div>
-            <h3 className="text-3xl font-bold text-amber-900 mb-2">Appointments</h3>
-            <p className="text-4xl font-bold text-amber-600 mb-2">{stats.appointments.upcoming}</p>
-            <p className="text-base text-amber-700">Upcoming</p>
+            <h3 className="text-3xl font-bold text-gray-800 mb-2">Appointments</h3>
+            <p className="text-4xl font-bold text-blue-600 mb-2">{stats.appointments.upcoming}</p>
+            <p className="text-base text-gray-600">Upcoming</p>
           </button>
         </div>
 
@@ -156,7 +156,7 @@ export function Dashboard() {
                   navigate(`/${item.type}s/${item.id}`);
                 }
               }}
-              className="bg-white rounded-2xl p-8 shadow-md hover:shadow-lg transition-all cursor-pointer border border-gray-100"
+              className="bg-white rounded-md p-8 shadow-md hover:shadow-lg transition-all cursor-pointer border border-gray-100"
             >
               <div className="flex items-center justify-between">
                 <div className="flex-1">
@@ -166,14 +166,14 @@ export function Dashboard() {
                   <p className="text-base text-gray-500">{item.date}</p>
                 </div>
                 <div className="flex items-center gap-5">
-                  <span className={`px-6 py-3 rounded-xl text-base font-semibold ${
+                  <span className={`px-6 py-3 rounded-md text-base font-semibold ${
                     item.status === "Active" ? "bg-green-50 text-green-600 animate-pulse" :
                     item.status === "Confirmed" ? "bg-teal-50 text-teal-600" :
                     "bg-amber-50 text-amber-600"
                   }`}>
                     {item.status}
                   </span>
-                  <button className="px-8 py-3 bg-teal-500 text-white rounded-xl font-semibold hover:bg-teal-600 transition-colors text-base">
+                  <button className="px-8 py-3 bg-teal-500 text-white rounded-md font-semibold hover:bg-teal-600 transition-colors text-base">
                     Open
                   </button>
                 </div>

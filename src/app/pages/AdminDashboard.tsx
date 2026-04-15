@@ -32,7 +32,7 @@ export function AdminDashboard() {
         </div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {stats.map((stat) => {
             const Icon = stat.icon;
             const colorClasses = {
@@ -44,9 +44,9 @@ export function AdminDashboard() {
             return (
               <div
                 key={stat.label}
-                className={`bg-gradient-to-br ${colorClasses[stat.color as keyof typeof colorClasses].split(' ')[0]} ${colorClasses[stat.color as keyof typeof colorClasses].split(' ')[1]} rounded-3xl p-6`}
+                className={`bg-gradient-to-br ${colorClasses[stat.color as keyof typeof colorClasses].split(' ')[0]} ${colorClasses[stat.color as keyof typeof colorClasses].split(' ')[1]} rounded-lg p-6`}
               >
-                <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 ${colorClasses[stat.color as keyof typeof colorClasses].split(' ')[2]}`}>
+                <div className={`w-12 h-12 rounded-md flex items-center justify-center mb-4 ${colorClasses[stat.color as keyof typeof colorClasses].split(' ')[2]}`}>
                   <Icon size={24} />
                 </div>
                 <p className="text-sm text-gray-600 mb-1">{stat.label}</p>
@@ -57,14 +57,14 @@ export function AdminDashboard() {
           })}
         </div>
 
-        <div className="grid grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Management Cards */}
           <div className="space-y-4">
             <h3 className="text-xl font-bold text-gray-800">Manage Users</h3>
             
-            <button className="w-full bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-all text-left border border-gray-100 flex items-center justify-between group">
+            <button className="w-full bg-white rounded-md p-6 shadow-sm hover:shadow-md transition-all text-left border border-gray-100 flex items-center justify-between group">
               <div className="flex items-center gap-4">
-                <div className="w-14 h-14 rounded-xl bg-blue-100 flex items-center justify-center">
+                <div className="w-14 h-14 rounded-md bg-blue-100 flex items-center justify-center">
                   <Users size={24} className="text-blue-500" />
                 </div>
                 <div>
@@ -75,9 +75,9 @@ export function AdminDashboard() {
               <ChevronRight size={24} className="text-gray-400 group-hover:text-gray-600" />
             </button>
 
-            <button className="w-full bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-all text-left border border-gray-100 flex items-center justify-between group">
+            <button className="w-full bg-white rounded-md p-6 shadow-sm hover:shadow-md transition-all text-left border border-gray-100 flex items-center justify-between group">
               <div className="flex items-center gap-4">
-                <div className="w-14 h-14 rounded-xl bg-teal-100 flex items-center justify-center">
+                <div className="w-14 h-14 rounded-md bg-teal-100 flex items-center justify-center">
                   <BookOpen size={24} className="text-teal-500" />
                 </div>
                 <div>
@@ -88,9 +88,9 @@ export function AdminDashboard() {
               <ChevronRight size={24} className="text-gray-400 group-hover:text-gray-600" />
             </button>
 
-            <button className="w-full bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-all text-left border border-gray-100 flex items-center justify-between group">
+            <button className="w-full bg-white rounded-md p-6 shadow-sm hover:shadow-md transition-all text-left border border-gray-100 flex items-center justify-between group">
               <div className="flex items-center gap-4">
-                <div className="w-14 h-14 rounded-xl bg-amber-100 flex items-center justify-center">
+                <div className="w-14 h-14 rounded-md bg-amber-100 flex items-center justify-center">
                   <Calendar size={24} className="text-amber-500" />
                 </div>
                 <div>
@@ -105,7 +105,7 @@ export function AdminDashboard() {
           {/* Recent Activity */}
           <div>
             <h3 className="text-xl font-bold text-gray-800 mb-4">Recent Activity</h3>
-            <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 space-y-4">
+            <div className="bg-white rounded-md p-6 shadow-sm border border-gray-100 space-y-4">
               {recentActivity.map((activity, index) => (
                 <div
                   key={index}
@@ -137,13 +137,13 @@ export function AdminDashboard() {
               View All
             </button>
           </div>
-          <div className="grid grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {upcomingEvents.map((event, index) => (
               <div
                 key={index}
-                className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100"
+                className="bg-white rounded-md p-6 shadow-sm border border-gray-100"
               >
-                <div className="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center mb-4">
+                <div className="w-12 h-12 rounded-md bg-blue-100 flex items-center justify-center mb-4">
                   <Calendar size={24} className="text-blue-500" />
                 </div>
                 <h4 className="text-lg font-semibold text-gray-800 mb-2">

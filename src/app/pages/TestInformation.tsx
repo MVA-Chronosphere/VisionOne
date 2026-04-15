@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { Layout } from "../components/Layout";
 import { Clock, Calendar, AlertCircle, BookOpen, CheckCircle, Shield, Eye } from "lucide-react";
@@ -84,6 +85,7 @@ const mockTests: Record<string, any> = {
 export function TestInformation() {
   const { testId } = useParams();
   const navigate = useNavigate();
+  const [hasReadInstructions, setHasReadInstructions] = useState(false);
   const test = mockTests[testId || "1"];
 
   if (!test) {
@@ -93,7 +95,7 @@ export function TestInformation() {
           <h2 className="text-2xl font-bold text-gray-800">Test not found</h2>
           <button
             onClick={() => navigate("/tests")}
-            className="mt-4 px-6 py-3 bg-blue-500 text-white rounded-xl hover:bg-blue-600"
+            className="mt-4 px-6 py-3 bg-blue-500 text-white rounded-md hover:bg-blue-600"
           >
             Back to Tests
           </button>
@@ -112,31 +114,25 @@ export function TestInformation() {
         {/* Back Button */}
         <button
           onClick={() => navigate("/tests")}
-          className="text-blue-500 hover:text-blue-600 font-medium mb-6"
+          className="text-blue-600 hover:text-blue-800 font-medium mb-6"
         >
-          ← Back to Tests
+          ← Back to Test List
         </button>
 
         {/* Test Header */}
-        <div className="bg-white rounded-3xl p-8 shadow-lg mb-6">
+        <div className="bg-white rounded-2xl p-8 shadow-lg mb-6">
           <div className="flex items-start justify-between mb-6">
             <div className="flex-1">
-              <h1 className="text-4xl font-bold text-gray-800 mb-3">
+              <h1 className="text-4xl font-bold text-gray-900 mb-3">
                 {test.title}
               </h1>
-              <div className="flex items-center gap-4">
-                <span className="px-4 py-2 bg-blue-50 text-blue-600 rounded-lg font-medium">
-                  {test.subject}
-                </span>
-                <span
-                  className={`px-4 py-2 rounded-lg font-medium ${
-                    test.status === "Active"
-                      ? "bg-green-100 text-green-600 animate-pulse"
-                      : test.status === "Upcoming"
-                      ? "bg-amber-50 text-amber-600"
-                      : "bg-gray-100 text-gray-600"
-                  }`}
-                >
+              <div className="flex flex-wrap items-center gap-3">
+                {test.subject && (
+                  <span className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium">
+                    {test.subject}
+                  </span>
+                )}
+                <span className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium">
                   {test.status}
                 </span>
               </div>
@@ -144,53 +140,53 @@ export function TestInformation() {
           </div>
 
           {/* Test Stats */}
-          <div className="grid grid-cols-4 gap-6 pt-6 border-t border-gray-200">
-            <div className="text-center">
-              <div className="w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-3">
-                <Calendar size={24} className="text-blue-600" />
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pt-6 border-t border-gray-200">
+            <div className="text-center border border-gray-200 rounded-md p-4">
+              <div className="w-14 h-14 bg-blue-600 rounded-md flex items-center justify-center mx-auto mb-3">
+                <Calendar size={24} className="text-white" />
               </div>
               <p className="text-sm text-gray-500 mb-1">Date</p>
-              <p className="font-bold text-gray-800">{test.date}</p>
+              <p className="font-semibold text-gray-900">{test.date}</p>
             </div>
-            <div className="text-center">
-              <div className="w-14 h-14 bg-teal-100 rounded-xl flex items-center justify-center mx-auto mb-3">
-                <Clock size={24} className="text-teal-600" />
+            <div className="text-center border border-gray-200 rounded-md p-4">
+              <div className="w-14 h-14 bg-blue-600 rounded-md flex items-center justify-center mx-auto mb-3">
+                <Clock size={24} className="text-white" />
               </div>
               <p className="text-sm text-gray-500 mb-1">Duration</p>
-              <p className="font-bold text-gray-800">{test.duration} min</p>
+              <p className="font-semibold text-gray-900">{test.duration} min</p>
             </div>
-            <div className="text-center">
-              <div className="w-14 h-14 bg-amber-100 rounded-xl flex items-center justify-center mx-auto mb-3">
-                <BookOpen size={24} className="text-amber-600" />
+            <div className="text-center border border-gray-200 rounded-md p-4">
+              <div className="w-14 h-14 bg-blue-600 rounded-md flex items-center justify-center mx-auto mb-3">
+                <BookOpen size={24} className="text-white" />
               </div>
               <p className="text-sm text-gray-500 mb-1">Questions</p>
-              <p className="font-bold text-gray-800">{test.totalQuestions}</p>
+              <p className="font-semibold text-gray-900">{test.totalQuestions}</p>
             </div>
-            <div className="text-center">
-              <div className="w-14 h-14 bg-purple-100 rounded-xl flex items-center justify-center mx-auto mb-3">
-                <CheckCircle size={24} className="text-purple-600" />
+            <div className="text-center border border-gray-200 rounded-md p-4">
+              <div className="w-14 h-14 bg-blue-600 rounded-md flex items-center justify-center mx-auto mb-3">
+                <CheckCircle size={24} className="text-white" />
               </div>
               <p className="text-sm text-gray-500 mb-1">Total Marks</p>
-              <p className="font-bold text-gray-800">{test.totalMarks}</p>
+              <p className="font-semibold text-gray-900">{test.totalMarks}</p>
             </div>
           </div>
         </div>
 
         {/* For Upcoming Tests - Show Only Schedule */}
         {test.status === "Upcoming" && (
-          <div className="bg-white rounded-3xl p-8 shadow-lg">
+          <div className="bg-white rounded-lg p-8 shadow-lg">
             <div className="text-center py-8">
-              <div className="w-20 h-20 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Clock size={40} className="text-amber-600" />
+              <div className="w-20 h-20 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Clock size={40} className="text-white" />
               </div>
               <h2 className="text-2xl font-bold text-gray-800 mb-4">
                 Test Scheduled
               </h2>
               <div className="max-w-md mx-auto">
-                <div className="bg-amber-50 rounded-2xl p-6 mb-6">
+                <div className="rounded-md p-6 mb-6">
                   <p className="text-gray-700 mb-3">This test is scheduled for:</p>
                   <div className="space-y-2">
-                    <p className="text-2xl font-bold text-amber-600">{test.date}</p>
+                    <p className="text-2xl font-bold text-gray-900">{test.date}</p>
                     <p className="text-xl font-semibold text-gray-800">{test.time}</p>
                   </div>
                 </div>
@@ -204,16 +200,16 @@ export function TestInformation() {
 
         {/* For Submitted Tests - Show Results */}
         {test.status === "Submitted" && (
-          <div className="bg-white rounded-3xl p-8 shadow-lg">
+          <div className="bg-white rounded-lg p-8 shadow-lg">
             <div className="text-center py-8">
-              <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <CheckCircle size={40} className="text-green-600" />
+              <div className="w-20 h-20 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                <CheckCircle size={40} className="text-white" />
               </div>
               <h2 className="text-2xl font-bold text-gray-800 mb-4">
                 Test Completed
               </h2>
               <div className="max-w-md mx-auto">
-                <div className="bg-blue-50 rounded-2xl p-8 mb-6">
+                <div className="bg-blue-50 rounded-md p-8 mb-6">
                   <p className="text-gray-700 mb-2">Your Score</p>
                   <p className="text-5xl font-bold text-blue-600 mb-4">{test.score}</p>
                   <p className="text-gray-600">Submitted on {test.date} at {test.time}</p>
@@ -223,90 +219,73 @@ export function TestInformation() {
           </div>
         )}
 
-        {/* For Active Tests - Show Instructions and Rules */}
+        {/* For Active Tests - Show Instructions and Rules in a Single Professional Card */}
         {test.status === "Active" && (
-          <>
-            {/* About This Test */}
-            <div className="bg-white rounded-3xl p-8 shadow-lg mb-6">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                  <BookOpen size={20} className="text-blue-600" />
-                </div>
-                <h2 className="text-2xl font-bold text-gray-800">About This Test</h2>
-              </div>
-              <p className="text-gray-700 leading-relaxed text-lg">
-                {test.description}
-              </p>
+          <div className="bg-white rounded-md p-8 shadow-lg">
+            <div className="mb-8">
+              <h2 className="text-3xl font-semibold text-gray-900 mb-3">About This Test</h2>
+              <p className="text-gray-700 leading-relaxed text-lg">{test.description}</p>
             </div>
 
-            {/* Instructions */}
-            <div className="bg-white rounded-3xl p-8 shadow-lg mb-6">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 bg-teal-100 rounded-lg flex items-center justify-center">
-                  <Eye size={20} className="text-teal-600" />
-                </div>
-                <h2 className="text-2xl font-bold text-gray-800">Instructions</h2>
-              </div>
-              <div className="space-y-3">
+            <div className="mb-8">
+              <h3 className="text-2xl font-semibold text-gray-900 mb-4">Instructions</h3>
+              <div className="space-y-4 text-gray-700 leading-7">
                 {test.instructions.map((instruction: string, index: number) => (
-                  <div key={index} className="flex items-start gap-4 p-4 bg-teal-50 rounded-xl">
-                    <div className="w-8 h-8 bg-teal-500 text-white rounded-full flex items-center justify-center flex-shrink-0 font-bold">
-                      {index + 1}
-                    </div>
-                    <p className="text-gray-700 pt-1 text-lg">{instruction}</p>
-                  </div>
+                  <p key={index}>{index + 1}. {instruction}</p>
                 ))}
               </div>
             </div>
 
-            {/* Important Rules - Anti-Cheating */}
-            <div className="bg-gradient-to-br from-red-50 to-orange-50 rounded-3xl p-8 shadow-lg mb-6 border-2 border-red-200">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center">
-                  <Shield size={20} className="text-white" />
-                </div>
-                <h2 className="text-2xl font-bold text-red-800">Important Rules - No Cheating Policy</h2>
-              </div>
-              <div className="space-y-3">
+            <div className="mb-8">
+              <h3 className="text-2xl font-semibold text-gray-900 mb-4">Important Rules</h3>
+              <div className="space-y-4 text-gray-700 leading-7">
                 {test.rules.map((rule: string, index: number) => (
-                  <div key={index} className="flex items-start gap-4 p-4 bg-white rounded-xl border border-red-200">
-                    <AlertCircle size={20} className="text-red-600 flex-shrink-0 mt-1" />
-                    <p className="text-gray-800 font-medium text-lg">{rule}</p>
-                  </div>
+                  <p key={index}>{index + 1}. {rule}</p>
                 ))}
               </div>
-              <div className="mt-6 p-4 bg-red-100 rounded-xl">
-                <p className="text-red-800 font-bold text-center text-lg">
-                  ⚠️ Violation of any rule will result in automatic test termination and a score of zero
-                </p>
+            </div>
+
+            <div className="mb-8 border-t border-gray-200 pt-6 text-gray-700 leading-7">
+              <h3 className="text-2xl font-semibold text-gray-900 mb-4">Test Details</h3>
+              <div className="grid gap-3 sm:grid-cols-2">
+                <p><strong>Duration:</strong> {test.duration} minutes</p>
+                <p><strong>Questions:</strong> {test.totalQuestions}</p>
+                <p><strong>Date:</strong> {test.date}</p>
+                <p><strong>Time:</strong> {test.time}</p>
+                <p><strong>Total Marks:</strong> {test.totalMarks}</p>
+                <p><strong>Status:</strong> {test.status}</p>
               </div>
             </div>
 
-            {/* Timer Warning */}
-            <div className="bg-blue-50 rounded-2xl p-6 mb-6 border-2 border-blue-200">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center">
-                  <Clock size={24} className="text-white" />
-                </div>
-                <div>
-                  <p className="font-bold text-gray-800 mb-1">Time Limit: {test.duration} minutes</p>
-                  <p className="text-gray-600">The timer will start immediately when you click "Start Test". The test will auto-submit when time runs out.</p>
-                </div>
-              </div>
+            <div className="mb-6 text-gray-700 leading-7">
+              <p className="font-semibold text-gray-900 mb-3">Time Limit</p>
+              <p>The timer will start immediately when you click "Start Test". The test will be submitted automatically when the time expires.</p>
             </div>
 
-            {/* Start Test Button */}
+            <label className="flex items-start gap-3 mb-6 text-gray-700">
+              <input
+                type="checkbox"
+                checked={hasReadInstructions}
+                onChange={(event) => setHasReadInstructions(event.target.checked)}
+                className="w-6 h-6 mt-1 text-blue-600 border-2 border-gray-400 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+              <span className="text-base font-medium leading-6">
+                I have read and understood the instructions and rules.
+              </span>
+            </label>
+
             <button
               onClick={handleStartTest}
-              className="w-full py-6 bg-gradient-to-r from-green-500 to-teal-500 text-white rounded-2xl font-bold text-xl hover:from-green-600 hover:to-teal-600 transition-all shadow-xl hover:shadow-2xl transform hover:scale-[1.02]"
+              disabled={!hasReadInstructions}
+              className={`w-full py-5 rounded-md font-semibold text-lg transition-colors ${hasReadInstructions ? "bg-green-600 text-white hover:bg-green-700" : "bg-gray-300 text-gray-500 cursor-not-allowed"}`}
             >
               Start Test Now
             </button>
 
             <p className="text-center text-gray-500 mt-4">
-              By clicking "Start Test", you agree to follow all instructions and rules mentioned above
+              By clicking "Start Test Now", you agree to follow the instructions and important rules listed above.
             </p>
-          </>
+          </div>
         )}
       </div>
     </Layout>

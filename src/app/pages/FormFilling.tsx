@@ -66,7 +66,7 @@ export function FormFilling() {
           <h2 className="text-2xl font-bold text-gray-800">Form not found</h2>
           <button
             onClick={() => navigate("/forms")}
-            className="mt-4 px-6 py-3 bg-blue-500 text-white rounded-xl hover:bg-blue-600"
+            className="mt-4 px-6 py-3 bg-blue-500 text-white rounded-md hover:bg-blue-600"
           >
             Back to Forms
           </button>
@@ -90,7 +90,7 @@ export function FormFilling() {
     <Layout>
       <div className="max-w-4xl mx-auto">
         {/* Header */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm mb-6">
+        <div className="bg-white rounded-md p-6 shadow-sm mb-6">
           <div className="flex items-center justify-between mb-4">
             <div>
               <h2 className="text-2xl font-bold text-gray-800">{form.title}</h2>
@@ -100,7 +100,7 @@ export function FormFilling() {
             </div>
             <button
               onClick={() => navigate("/forms")}
-              className="p-3 hover:bg-gray-100 rounded-xl transition-colors"
+              className="p-3 hover:bg-gray-100 rounded-md transition-colors"
             >
               <X size={24} className="text-gray-600" />
             </button>
@@ -108,7 +108,7 @@ export function FormFilling() {
 
           {/* User Info */}
           {user?.role === "student" && (
-            <div className="mt-4 p-4 bg-blue-50 rounded-xl">
+            <div className="mt-4 p-4 bg-blue-50 rounded-md">
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <p className="text-sm text-gray-600 mb-1">Name</p>
